@@ -17,7 +17,7 @@
         <ul class="students" id="studentList">
             <% students.forEach(function(student) { %>
                 <li>
-                    <strong><%= student.fname %> <%= student.lname %></strong> | GPA: <%= student.gpa %> | Enrolled: <%= student.enrolled %>
+                    <strong><%= student.first_name %> <%= student.last_name %></strong> | GPA: <%= student.gpa %> | Enrolled: <%= student.enrolled %>
                 </li>
             <% }); %>
             <!-- <% for(var i = 0; i < students.length; i++) {%>

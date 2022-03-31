@@ -1,30 +1,26 @@
 const express = require('express');
 const bp = require('body-parser');
+const mongojs = require("./mongo");
 const MongoClient = require('mongodb').MongoClient;
 var uri = "mongodb://127.0.0.1:27017";
 
 const app = express();
 
+app.use(bp.urlencoded({ extended: true }));
+app.use(bp.json())
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+
+app.get('/students', (req, res) => { 
+    mongojs.getMongoFindAll(res);
+});
+
 MongoClient.connect(uri, { useUnifiedTopology: true })
     .then(client => {
-        console.log("Connected to MongoDB database");
-        const db = client.db('testdb');
-        const coll = db.collection('testcollection');
-
-        app.use(bp.urlencoded({ extended: true }));
-        app.use(bp.json())
-        app.use(express.static('public'));
-        app.set('view engine', 'ejs');
-
-        app.get('/', (req, res) => { 
-            db.collection('testcollection').find().toArray()
-                .then(results => { res.render('index.ejs', { students: results }); })
-                .catch(error => console.error(error));
-        });
         
         app.post('/students', (req, res) => {
             coll.insertOne(req.body)
-                .then(result => { res.redirect('/'); }) //redirects to the index page
+                .then(result => { res.redirect('/students'); }) //redirects to the index page
                 .catch(error => console.error(error));
         });
 
@@ -49,9 +45,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     res.json("Deleted a Test entry"); })
                 .catch(error => console.log(error));
         })
-
-        app.listen(5678, function() {
-            console.log('listening on port 5678');
-        });
     })
     .catch(error => console.error(error));
+
+    app.listen(5678, function() {
+        console.log('listening on port 5678');
+    });
