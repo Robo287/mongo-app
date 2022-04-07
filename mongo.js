@@ -37,13 +37,29 @@ function getMongoFindName(res) {
     }).catch(error => console.error(error));
 };
 
-function postMongoInsert(req, res, params) {
+function postMongoInsert(req, res) {
+    var record_id = new Date().getTime();
+    var obj = {};
+
+    obj._id = record_id;
+    obj.fname = req.body.fname;
+    obj.lname = req.body.lname;
+    obj.gpa = parseFloat(req.body.gpa);
+    if (req.body.enrolled == "true") { //change for switch
+        obj.enrolled = true;
+      } else {
+        obj.enrolled = false;
+      }
+
     MongoClient.connect(uri, { useUnifiedTopology: true })
         .then(client => {
             console.log("Connected to MongoDB database");
             const db = client.db('roster');
             const coll = db.collection('students');
 
+            coll.insertOne(obj)
+            .then(result => { res.redirect('/students'); })
+            .catch(error => console.error(error));
         }).catch(error => console.error(error));
 };
 
@@ -67,6 +83,12 @@ function delMongoDelete(res) {
     }).catch(error => console.error(error));
 };
 
+function test(req, res) {
+    console.log(req.body.fname);
+}
+
 module.exports = { 
+    test: test,
+    postMongoInsert: postMongoInsert,
     getMongoFindAll: getMongoFindAll 
 };

@@ -15,14 +15,12 @@ app.get('/students', (req, res) => {
     mongojs.getMongoFindAll(res);
 });
 
+app.post('/students', (req, res) => {
+    mongojs.postMongoInsert(req, res);
+});
+
 MongoClient.connect(uri, { useUnifiedTopology: true })
     .then(client => {
-        
-        app.post('/students', (req, res) => {
-            coll.insertOne(req.body)
-                .then(result => { res.redirect('/students'); }) //redirects to the index page
-                .catch(error => console.error(error));
-        });
 
         app.put('/students', (req, res) => {
             coll.findOneAndUpdate(

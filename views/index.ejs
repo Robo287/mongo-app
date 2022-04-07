@@ -14,18 +14,31 @@
             <button type="submit">Submit</button>
         </form>
         <h2> Students </h2>
-        <ul class="students" id="studentList">
+        <table class="students" id="studentList">
+            <tr>
+                <th>Name</th>
+                <th>GPA</th>
+                <th>Enrollment Status</th>
+            </tr>
             <% students.forEach(function(student) { %>
-                <li>
-                    <strong><%= student.first_name %> <%= student.last_name %></strong> | GPA: <%= student.gpa %> | Enrolled: <%= student.enrolled %>
-                </li>
-            <% }); %>
-            <!-- <% for(var i = 0; i < students.length; i++) {%>
-                <li class="student">
-                    <span><%= students[i].fname %></span> <span><%= students[i].lname %></span>
-                </li>
-            <% } %> -->
-        </ul>
+                <% var i = 0 %>
+                <% var updbtn = 'updbtn' + i %>
+                <% var delbtn = 'delbtn' + i %>
+                <tr>
+                    <td><%= student.fname %> <%= student.lname %></td>
+                    <td><%= student.gpa %></td>
+                    <td><%= student.enrolled %></td>
+                    <td><button id="<%= updbtn %>">Update</button></td>
+                    <td><button id="<%= delbtn %>">Delete</button></td>
+                </tr>
+                <% i++ %>
+                <% }); %>
+        </table>
+        <!-- <% for(var i = 0; i < students.length; i++) {%>
+            <li class="student">
+                <span><%= students[i].fname %></span> <span><%= students[i].lname %></span>
+            </li>
+        <% } %> -->
         <div>
             <h2> Update first student </h2>
             <p> Replace the first student entry with new values </p>
