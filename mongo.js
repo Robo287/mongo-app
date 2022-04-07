@@ -1,3 +1,4 @@
+const req = require('express/lib/request');
 const res = require('express/lib/response');
 
 const MongoClient = require('mongodb').MongoClient;
@@ -17,23 +18,25 @@ function getMongoFindAll(res) {
         }).catch(error => console.error(error));
 };
 
-function getMongoFindID(res) {
+function getMongoFindQuery(passQuery, res) {
+    var query;
+    if (isNaN(passQuery)) {
+        query = { "lname": passQuery };
+    } else {
+        query = { "_id": parseInt(passQuery) };
+    }
+    console.log(query);
+
     MongoClient.connect(uri, { useUnifiedTopology: true })
     .then(client => {
         console.log("Connected to MongoDB database");
         const db = client.db('roster');
         const coll = db.collection('students');
 
-    }).catch(error => console.error(error));
-};
-
-function getMongoFindName(res) {
-    MongoClient.connect(uri, { useUnifiedTopology: true })
-    .then(client => {
-        console.log("Connected to MongoDB database");
-        const db = client.db('roster');
-        const coll = db.collection('students');
-
+        console.log("MONGODB FIND: GET - By Query");
+        coll.find(query).toArray()
+            .then((results) => { console.log(results); res.render('index.ejs', { students: results }); })
+            .catch(error => console.error(error));
     }).catch(error => console.error(error));
 };
 
@@ -63,32 +66,45 @@ function postMongoInsert(req, res) {
         }).catch(error => console.error(error));
 };
 
-function putMongoUpdate(res) {
+function putMongoUpdate(query, data, res) {
     MongoClient.connect(uri, { useUnifiedTopology: true })
     .then(client => {
         console.log("Connected to MongoDB database");
         const db = client.db('roster');
         const coll = db.collection('students');
 
+        console.log(query, data);
+        coll.findOneAndUpdate(
+            { _id: parseInt(query) }, 
+            { $set: { fname: data.fname, lname: data.lname, gpa: data.gpa, enrolled: data.enrolled }},
+            { upsert: true })
+            .then(results => { console.log("Results:\n"); console.log(results); res.json('Success') })
+            .catch(error => console.log(error));
     }).catch(error => console.error(error));
 };
 
-function delMongoDelete(res) {
+function delMongoDelete(rid, res) {
+    var query = { "_id": parseInt(rid) };
     MongoClient.connect(uri, { useUnifiedTopology: true })
     .then(client => {
         console.log("Connected to MongoDB database");
         const db = client.db('roster');
         const coll = db.collection('students');
 
+        coll.deleteOne(query)
+            .then(results => {
+                if (results.deletedCount === 0) {
+                    return res.json('404 - Unable to locate record');
+                }
+                res.json("Record: " + rid + " has been deleted");
+            });
     }).catch(error => console.error(error));
 };
-
-function test(req, res) {
-    console.log(req.body.fname);
-}
 
 module.exports = { 
-    test: test,
     postMongoInsert: postMongoInsert,
-    getMongoFindAll: getMongoFindAll 
+    getMongoFindAll: getMongoFindAll,
+    getMongoFindQuery: getMongoFindQuery ,
+    putMongoUpdate: putMongoUpdate,
+    delMongoDelete: delMongoDelete
 };

@@ -6,13 +6,29 @@
     </head>
     <body>
         <h1> Student Database </h1>
-        <form action="/students" method="POST">
+        <form action="/students" id="post-form" method="POST">
             <input type="text" placeholder="First name" name="fname">
             <input type="text" placeholder="Last name" name="lname">
             <input type="text" placeholder="GPA" name="gpa">
             <input type="text" placeholder="Enrolled? true or false" name="enrolled">
             <button type="submit">Submit</button>
         </form>
+        <div id="put-form">
+            <h4>Record ID: <span id="edit-id"></span></h4>
+            <div>
+                <input type="text" id="input-fname" placeholder="First name" name="fname">
+                <input type="text" id="input-lname" placeholder="Last name" name="lname">
+                <input type="text" id="input-gpa" placeholder="GPA" name="gpa">
+                <input type="text" id="input-enrolled" placeholder="Enrolled? true or false" name="enrolled">
+                <button type="submit" onclick="update()" id="update-button">Update</button>
+            </div>
+        </div>
+        <br />
+        <div id="search-form">
+            <input type="text" id="input-query" placeholder="Search for student">
+            <button onclick="search()" id="search-button">Search</button>
+            <a class="button" href="\students">Clear Seach</a>
+        </div>
         <h2> Students </h2>
         <table class="students" id="studentList">
             <tr>
@@ -31,7 +47,7 @@
                     <td><%= student.gpa %></td>
                     <td><%= student.enrolled %></td>
                     <td><button id="<%= updbtn %>" onclick="selectupdbtn(this.id)">Update</button></td>
-                    <td><button id="<%= delbtn %>">Delete</button></td>
+                    <td><button id="<%= delbtn %>" onclick="selectdelbtn(this.id)">Delete</button></td>
                 </tr>
                 <% i = i + 1 %>
             <% }); %>
@@ -41,16 +57,16 @@
                 <span><%= students[i].fname %></span> <span><%= students[i].lname %></span>
             </li>
         <% } %> -->
-        <div>
+        <!-- <div>
             <h2> Update first student </h2>
             <p> Replace the first student entry with new values </p>
             <button id="update-button">Replace</button>
-        </div>
-        <div>
+        </div> -->
+        <!-- <div>
             <h2> Remove Test Entry </h2>
             <p> Delete one of the update/put test entries </p>
             <button id="delete-button">Delete</button>
-        </div>
+        </div> -->
         <br />
         <div id="message"></div>
         <script src="/main.js"></script>
