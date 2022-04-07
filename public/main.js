@@ -1,23 +1,31 @@
+const { response } = require("express");
+
 const studentList = document.querySelector("#studentList");
-const updateBtn = document.querySelector('#update-button');
-const deleteBtn = document.querySelector('#delete-button');
+var updateBtn;
+var deleteBtn;
 const messageDiv = document.querySelector('#message');
 
-updateBtn.addEventListener('click', _ => {
-    fetch('/students', {
-        method: 'put',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            fname: 'Update',
-            lname: 'PutTest',
-            gpa: '2.0',
-            enrolled:  'true'
-        })
-    })
-        .then(res => { if (res.ok) return res.json(); })
-        .then(response => { window.location.reload(true); })
-        .catch(error => console.log(error));
-});
+function selectupdbtn(id) {
+    updateBtn = document.querySelector("#" + id);
+    var rid = updateBtn.parentNode.parentNode.firstElementChild.innerHTML;
+    alert(rid);
+};
+
+// updateBtn.addEventListener('click', _ => {
+//     fetch('/students', {
+//         method: 'put',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({
+//             fname: 'Update',
+//             lname: 'PutTest',
+//             gpa: '2.0',
+//             enrolled:  'true'
+//         })
+//     })
+//         .then(res => { if (res.ok) return res.json(); })
+//         .then(response => { window.location.reload(true); })
+//         .catch(error => console.log(error));
+// });
 
 deleteBtn.addEventListener('click', _ => {
     fetch('/students', {

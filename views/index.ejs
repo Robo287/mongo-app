@@ -16,23 +16,25 @@
         <h2> Students </h2>
         <table class="students" id="studentList">
             <tr>
+                <th>Record ID</th>
                 <th>Name</th>
                 <th>GPA</th>
                 <th>Enrollment Status</th>
             </tr>
+            <% var i = 0 %>
             <% students.forEach(function(student) { %>
-                <% var i = 0 %>
                 <% var updbtn = 'updbtn' + i %>
                 <% var delbtn = 'delbtn' + i %>
                 <tr>
+                    <td id="rid"><%= student._id %></td>
                     <td><%= student.fname %> <%= student.lname %></td>
                     <td><%= student.gpa %></td>
                     <td><%= student.enrolled %></td>
-                    <td><button id="<%= updbtn %>">Update</button></td>
+                    <td><button id="<%= updbtn %>" onclick="selectupdbtn(this.id)">Update</button></td>
                     <td><button id="<%= delbtn %>">Delete</button></td>
                 </tr>
-                <% i++ %>
-                <% }); %>
+                <% i = i + 1 %>
+            <% }); %>
         </table>
         <!-- <% for(var i = 0; i < students.length; i++) {%>
             <li class="student">
