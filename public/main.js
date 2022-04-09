@@ -1,5 +1,3 @@
-// const { response } = require("express");
-
 const { response } = require("express");
 
 const studentList = document.querySelector("#studentList");
@@ -9,6 +7,7 @@ var recUpdateBtn;
 var recDeleteBtn;
 const messageDiv = document.querySelector('#message');
 
+// finds which record update button was pressed and generates the form to do the PUT request
 function selectupdbtn(id) {
     recUpdateBtn = document.querySelector("#" + id);
     var rid = recUpdateBtn.parentNode.parentNode.cells[0].innerHTML;
@@ -24,10 +23,12 @@ function selectupdbtn(id) {
     var enrolled = recUpdateBtn.parentNode.parentNode.cells[3].innerHTML;
     document.querySelector("#input-enrolled").value = enrolled;
     document.querySelector('#put-form-div').style.display = "block";
+    document.querySelector('#post-form-div').style.display = "none";
     console.log("ID: " + rid + " | First Name: " + fname + " | Last Name: " + lname + " | GPA: " + gpa + " | Enrolled: " + enrolled);
     
 };
 
+// finds which record delete button was pressed and sends a DELETE request for that record
 function selectdelbtn(id) {
     recDeleteBtn = document.querySelector("#" + id);
     var rid = recDeleteBtn.parentNode.parentNode.cells[0].innerHTML;
@@ -47,18 +48,19 @@ function selectdelbtn(id) {
         .catch(error => console.log(error));
 }
 
+// takes the search query and sends a GET to the query URL route
 function search() {
     var query = document.querySelector("#input-query").value;
-    fetch('/students/' + query, {
-        method: 'get'
-    })
-    .catch(error => console.log(error));
+    location.href = "http://localhost:5678/students/" + query;
 }
 
+// used to show the add student form and hides the update student form if it's being shown
 function showForm() {
     document.querySelector('#post-form-div').style.display = "block";
+    document.querySelector('#put-form-div').style.display = "none";
 }
 
+// takes the from input from the update form and passes it to a PUT request
 function update() {
     var rid = document.querySelector('#edit-id').innerText;
     var fname = document.querySelector('#input-fname').value;
@@ -75,16 +77,18 @@ function update() {
         .catch(error => console.log(error));
 }
 
+// clears the record ID text on the PUT form and closes either PUT or POST form if they are open
 function cancel() {
     document.querySelector('#edit-id').innerText = "";
     document.querySelector('#put-form-div').style.display = "none";
     document.querySelector('#post-form-div').style.display = "none";
 }
 
+// added functionality to dynamically filter the shown list of search results
 function filterList() {
     var td;
-    var input = document.querySelector('#input-query');
-    var filter = input.value;
+    var input = document.querySelector('#filter-query');
+    var filter = input.value.toUpperCase();
     var table = document.querySelector('#studentList');
     var tr = table.getElementsByTagName("tr");
 
@@ -96,7 +100,7 @@ function filterList() {
         }
         if (td) {
             var txtValue = td.textContent || td.innerText;
-            if (txtValue.indexOf(filter) > -1) {
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
                 tr[i].style.display = "";
             } else {
                 tr[i].style.display = "none";
@@ -104,38 +108,3 @@ function filterList() {
         }
     }
 }
-
-// updateBtn.addEventListener('click', _ => {
-//     fetch('/students', {
-//         method: 'put',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({
-//             fname: 'Update',
-//             lname: 'PutTest',
-//             gpa: '2.0',
-//             enrolled:  'true'
-//         })
-//     })
-//         .then(res => { if (res.ok) return res.json(); })
-//         .then(response => { window.location.reload(true); })
-//         .catch(error => console.log(error));
-// });
-
-// deleteBtn.addEventListener('click', _ => {
-//     fetch('/students', {
-//         method: 'delete',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({
-//             fname: 'Test'
-//         })
-//     })
-//         .then(res => { if (res.ok) return res.json(); })
-//         .then(response => {
-//             if (response === "No entry to delete") {
-//                 messageDiv.textContent = 'There are no matching entries to delete'
-//             } else {
-//                 window.location.reload(true);
-//             }
-//         })
-//         .catch(error => console.log(error));
-// })
