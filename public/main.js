@@ -23,7 +23,9 @@ function selectupdbtn(id) {
     document.querySelector("#input-gpa").value = gpa;
     var enrolled = recUpdateBtn.parentNode.parentNode.cells[3].innerHTML;
     document.querySelector("#input-enrolled").value = enrolled;
+    document.querySelector('#put-form-div').style.display = "block";
     console.log("ID: " + rid + " | First Name: " + fname + " | Last Name: " + lname + " | GPA: " + gpa + " | Enrolled: " + enrolled);
+    
 };
 
 function selectdelbtn(id) {
@@ -53,6 +55,10 @@ function search() {
     .catch(error => console.log(error));
 }
 
+function showForm() {
+    document.querySelector('#post-form-div').style.display = "block";
+}
+
 function update() {
     var rid = document.querySelector('#edit-id').innerText;
     var fname = document.querySelector('#input-fname').value;
@@ -67,6 +73,36 @@ function update() {
         .then(res => { if (res.ok) return res.json(); })
         .then(response => { window.location.reload(true); })
         .catch(error => console.log(error));
+}
+
+function cancel() {
+    document.querySelector('#edit-id').innerText = "";
+    document.querySelector('#put-form-div').style.display = "none";
+    document.querySelector('#post-form-div').style.display = "none";
+}
+
+function filterList() {
+    var td;
+    var input = document.querySelector('#input-query');
+    var filter = input.value;
+    var table = document.querySelector('#studentList');
+    var tr = table.getElementsByTagName("tr");
+
+    for (var i = 0; i < tr.length; i++) {
+        if (isNaN(filter)) {
+            td = tr[i].getElementsByTagName("td")[1];
+        } else {
+            td = tr[i].getElementsByTagName("td")[0];
+        }
+        if (td) {
+            var txtValue = td.textContent || td.innerText;
+            if (txtValue.indexOf(filter) > -1) {
+                tr[i].style.display = "";
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
 }
 
 // updateBtn.addEventListener('click', _ => {
